@@ -1,0 +1,10 @@
+directory "<%= current_path %>"
+environment "<%= fetch(:rack_env, fetch(:rails_env, "production")) %>"
+daemonize false
+pidfile "<%= shared_path %>/tmp/pids/puma.pid"
+state_path "<%= shared_path %>/tmp/puma/puma.state"
+stdout_redirect "<%= shared_path %>/log/puma.stdout.log", "<%= shared_path %>/log/puma.stderr.log", true
+quiet
+threads <%= fetch(:systemd_puma_threads_min, 0) %>, <%= fetch(:systemd_puma_threads_max, 16) %>
+workers <%= fetch(:systemd_puma_workers, 1) %>
+bind "<%= fetch(:systemd_puma_bind) %>"
