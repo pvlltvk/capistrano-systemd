@@ -80,10 +80,11 @@ namespace :systemd do
         if test "[ -f #{deploy_to}/systemd/available/puma-#{fetch(:application)}.service ]"
           within "#{deploy_to}/systemd/enabled" do
             execute :ln, "-sf", "../available/puma-#{fetch(:application)}.service", "puma-#{fetch(:application)}.service"
-	execute :ln, "-sf", "#{deploy_to}/systemd/available/puma-#{fetch(:application)}.service", "/etc/systemd/system/puma-#{fetch(:application)}.service"
-	execute "sudo systemctl enable puma-#{fetch(:application)}.service"
-	within "#{deploy_to}/current" do
+	  execute :ln, "-sf", "#{deploy_to}/systemd/available/puma-#{fetch(:application)}.service", "/etc/systemd/system/puma-#{fetch(:application)}.service"
+	  execute "sudo systemctl enable puma-#{fetch(:application)}.service"
+	  within "#{deploy_to}/current" do
 	    execute "rvm wrapper `rvm current` #{fetch(:application)} pumactl"
+    	  end
         else
           error "Puma systemd service isn't found. You should run systemd:puma:setup."
         end
@@ -131,11 +132,11 @@ end
 
 namespace :load do
   task :defaults do
-    set :systemd_puma_run_template, File.expand_path("../puma.service.erb", __FILE__)
+    set :systemd_puma_service_template, File.expand_path("../puma.service.erb", __FILE__)
     set :systemd_puma_config_template, File.expand_path("../puma.erb", __FILE__)
     set :systemd_puma_workers, 1
     set :systemd_puma_threads_min, 0
     set :systemd_puma_threads_max, 16
-    set :systemd_puma_bind, nil
+    set :systemd_puma_bind, 'unix:///tmp/puma-#{fetch(:application)}.sock'
   end
 end
