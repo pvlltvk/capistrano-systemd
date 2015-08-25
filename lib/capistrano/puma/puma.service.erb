@@ -1,0 +1,17 @@
+[Unit]
+Description=Puma web server
+After=syslog.target
+After=network.target
+
+[Service]
+Type=simple
+User=rubyworker
+ExecStart=/home/rubyworker/.rvm/bin/<%= fetch(:application) %>_pumactl -F <%= fetch(:deploy_to) %>/systemd/puma.rb start
+ExecStop=/home/rubyworker/.rvm/bin/<%= fetch(:application) %>_pumactl -F <%= fetch(:deploy_to) %>/systemd/puma.rb stop
+ExecReload=/home/rubyworker/.rvm/bin/<%= fetch(:application) %>_pumactl -F <%= fetch(:deploy_to) %>/systemd/puma.rb phased-restart
+
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
