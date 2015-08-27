@@ -8,15 +8,6 @@ namespace :systemd do
         else
           info "Directory 'systemd' already exists"
         end
-        %w(.env available enabled).each do |subdir|
-          if test "[ ! -d #{deploy_to}/systemd/#{subdir} ]"
-            execute :mkdir, "-v", "#{deploy_to}/systemd/#{subdir}"
-          else
-            info "Directory 'systemd/#{subdir}' already exists"
-          end
-        end
-
-        execute "echo $HOME > #{deploy_to}/systemd/.env/HOME"
       end
     end
   end
