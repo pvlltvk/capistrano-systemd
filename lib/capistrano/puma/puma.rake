@@ -104,6 +104,17 @@ namespace :systemd do
       end
     end
 
+    desc "Create new wrapper for pumactl"
+    task :wrapper do
+      on roles(:app) do
+	within "#{deploy_to}/current" do
+	    rvm_current = capture(:rvm, 'current')
+	    execute :rvm, "wrapper", "#{rvm_current}", "#{fetch(:application)} pumactl"
+        end
+      end
+    end
+
+
     %w[start stop restart status].each do |command|
     desc "#{command} Puma server."
     task command do
