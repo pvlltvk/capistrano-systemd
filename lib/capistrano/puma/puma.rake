@@ -96,7 +96,7 @@ namespace :systemd do
       invoke "systemd:puma:stop"
       on roles(:app) do
         if test "[ -f /etc/systemd/system/puma-#{fetch(:application)}.service ]"
-          execute "systemctl disable puma-#{fetch(:application)}.service"
+          execute "sudo systemctl disable puma-#{fetch(:application)}.service"
           execute :rm, "-f", "/etc/systemd/system/puma-#{fetch(:application)}.service"
         else
           error "Puma systemd service isn't enabled."
